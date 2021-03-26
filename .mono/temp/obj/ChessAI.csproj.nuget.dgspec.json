@@ -1,0 +1,43 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj": {}
+  },
+  "projects": {
+    "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj",
+        "projectName": "ChessAI",
+        "projectPath": "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj",
+        "packagesPath": "/home/siffer/.nuget/packages/",
+        "outputPath": "/home/siffer/Documents/Projekts/ChessAI/.mono/temp/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/siffer/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "runtimeIdentifierGraphPath": "/usr/lib/mono/msbuild/Current/bin/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,158 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://SRC/Game/BoardUI.cs" type="Script" id=1]
+[ext_resource path="res://SRC/Game/Piece.tscn" type="PackedScene" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.145098, 0.14902, 0.180392, 1 )
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Main" type="Node2D"]
+
+[node name="BoardUI" type="Node2D" parent="."]
+position = Vector2( 212, 0 )
+script = ExtResource( 1 )
+black = Color( 0.231373, 0.231373, 0.282353, 1 )
+white = Color( 0.788235, 0.784314, 0.815686, 1 )
+selected = Color( 0.741176, 0.698039, 0.4, 1 )
+avaliable = Color( 0.784314, 0.615686, 0.454902, 1 )
+enemy = Color( 0.792157, 0.470588, 0.345098, 1 )
+defaultUI = Color( 0.2, 0.2, 0.270588, 1 )
+selectedUI = Color( 0.368627, 0.388235, 0.47451, 1 )
+
+[node name="UI" type="Control" parent="."]
+margin_left = 820.0
+margin_top = 201.0
+margin_right = 1017.0
+margin_bottom = 398.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 15
+custom_constants/margin_top = 15
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 15
+
+[node name="Grid" type="GridContainer" parent="UI/Margin"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 182.0
+margin_bottom = 182.0
+custom_constants/vseparation = 15
+custom_constants/hseparation = 15
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="2" type="TextureButton" parent="UI/Margin/Grid"]
+margin_right = 76.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 76, 76 )
+
+[node name="Panel" type="Panel" parent="UI/Margin/Grid/2"]
+modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 0.943878
+margin_bottom = 0.943878
+mouse_filter = 2
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Piece" parent="UI/Margin/Grid/2" instance=ExtResource( 2 )]
+position = Vector2( 38, 38 )
+scale = Vector2( 0.228, 0.228 )
+frame = 2
+
+[node name="3" type="TextureButton" parent="UI/Margin/Grid"]
+margin_left = 91.0
+margin_right = 167.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 76, 76 )
+
+[node name="Panel" type="Panel" parent="UI/Margin/Grid/3"]
+modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Piece" parent="UI/Margin/Grid/3" instance=ExtResource( 2 )]
+position = Vector2( 38, 38 )
+scale = Vector2( 0.228, 0.228 )
+frame = 3
+
+[node name="4" type="TextureButton" parent="UI/Margin/Grid"]
+margin_top = 91.0
+margin_right = 76.0
+margin_bottom = 167.0
+rect_min_size = Vector2( 76, 76 )
+
+[node name="Panel" type="Panel" parent="UI/Margin/Grid/4"]
+modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Piece" parent="UI/Margin/Grid/4" instance=ExtResource( 2 )]
+position = Vector2( 38, 38 )
+scale = Vector2( 0.228, 0.228 )
+frame = 4
+
+[node name="5" type="TextureButton" parent="UI/Margin/Grid"]
+margin_left = 91.0
+margin_top = 91.0
+margin_right = 167.0
+margin_bottom = 167.0
+rect_min_size = Vector2( 76, 76 )
+
+[node name="Panel" type="Panel" parent="UI/Margin/Grid/5"]
+modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Piece" parent="UI/Margin/Grid/5" instance=ExtResource( 2 )]
+position = Vector2( 38, 38 )
+scale = Vector2( 0.228, 0.228 )
+frame = 5
+[connection signal="pressed" from="UI/Margin/Grid/2" to="BoardUI" method="_on_Button_pressed" binds= [ 2 ]]
+[connection signal="pressed" from="UI/Margin/Grid/3" to="BoardUI" method="_on_Button_pressed" binds= [ 3 ]]
+[connection signal="pressed" from="UI/Margin/Grid/4" to="BoardUI" method="_on_Button_pressed" binds= [ 4 ]]
+[connection signal="pressed" from="UI/Margin/Grid/5" to="BoardUI" method="_on_Button_pressed" binds= [ 5 ]]
