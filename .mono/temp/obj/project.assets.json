@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj",
+      "projectUniqueName": "/home/siffer/Projects/ChessAI/ChessAI.csproj",
       "projectName": "ChessAI",
-      "projectPath": "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj",
+      "projectPath": "/home/siffer/Projects/ChessAI/ChessAI.csproj",
       "packagesPath": "/home/siffer/.nuget/packages/",
-      "outputPath": "/home/siffer/Documents/Projekts/ChessAI/.mono/temp/obj/",
+      "outputPath": "/home/siffer/Projects/ChessAI/.mono/temp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/siffer/.config/NuGet/NuGet.Config"

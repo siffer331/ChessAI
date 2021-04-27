@@ -6,3 +6,11 @@
 /home/siffer/Documents/Projekts/ChessAI/.mono/temp/obj/Debug/ChessAI.csproj.CoreCompileInputs.cache
 /home/siffer/Documents/Projekts/ChessAI/.mono/temp/obj/Debug/ChessAI.dll
 /home/siffer/Documents/Projekts/ChessAI/.mono/temp/obj/Debug/ChessAI.pdb
+/home/siffer/Projects/ChessAI/.mono/temp/bin/Debug/ChessAI.dll
+/home/siffer/Projects/ChessAI/.mono/temp/bin/Debug/ChessAI.pdb
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.csprojAssemblyReference.cache
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.AssemblyInfoInputs.cache
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.AssemblyInfo.cs
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.csproj.CoreCompileInputs.cache
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.dll
+/home/siffer/Projects/ChessAI/.mono/temp/obj/Debug/ChessAI.pdb
