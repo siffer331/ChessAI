@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YoOslUrY2k6K6sWiJPo6EOkJADkgLQdv5aCZU+VaZwrcRpvzI2gGeC0hi7p4ClfP/Owu3/k1EvqiMTKxyfqIrg==",
+  "dgSpecHash": "NSOBUC2+98vPVSt1nCXzO1n7JrmBl67pGXJA9ZRTBzBnF1vgLKznnUlO8T3fJiuMkUPbd3+H4nZt49w9Z5Wbug==",
   "success": true,
-  "projectFilePath": "/home/siffer/Documents/Projekts/ChessAI/ChessAI.csproj",
+  "projectFilePath": "/home/siffer/Documents/Projects/ChessAI/ChessAI.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

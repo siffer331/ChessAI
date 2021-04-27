@@ -22,7 +22,7 @@ public class BoardUI : Node2D
 	private Color selectedUI;
 	
 	private AI ai;
-	private float aiMove = 100f;
+	private float aiMove = 100;
 	private int selectedTile = -1;
 	private Board board = new Board();
 	private int promotion = Pieces.Queen;
@@ -51,6 +51,8 @@ public class BoardUI : Node2D
 					if(board.board[tile] != 0) overlay = enemy;
 				}
 				if(tile == selectedTile) overlay = selected;
+				if(stack.Count>0&&(tile==stack.Peek().toB||tile==stack.Peek().fromB))
+					overlay = selected;
 				//if(board.pieces[0].ContainsKey(tile)) overlay = new Color(1,1,1);
 				//if(board.pieces[1].ContainsKey(tile)) overlay = new Color(0,0,0); 
 				c = c.LinearInterpolate(overlay, .75f);
@@ -88,7 +90,7 @@ public class BoardUI : Node2D
 	
 	public override void _Process(float delta) {
 		if(aiMove < 90 && aiMove > 0.01) {
-			BoardMove move = ai.GetBestMove(4);
+			BoardMove move = ai.GetBestMove(5);
 			stack.Push(move);
 			board.MakeMove(move);
 			DrawBoard(board);

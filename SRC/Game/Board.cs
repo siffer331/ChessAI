@@ -95,7 +95,7 @@ public class Board {
 	}
 	
 	//get possible moves from a tile
-	public List<BoardMove> GetMoves(int tile) {
+	public List<BoardMove> GetMoves(int tile, bool onlyKilling = false) {
 		List<BoardMove> moves = new List<BoardMove>();
 		if(board[tile] == 0 || (((board[tile]>>3) == 1) == turn)) return moves;
 		Vector2 p = ToV(tile);
@@ -109,7 +109,7 @@ public class Board {
 			for(int j = 1; ToI(p+j*d) > -1 && (j == 1 || m.line); j++) {
 				int newTile = ToI(p+j*d);
 				if(
-					(board[newTile] == 0 && !m.exclusive) || 
+					(board[newTile] == 0 && !m.exclusive && !onlyKilling) || 
 					(
 						m.kill && board[newTile] != 0 &&
 						(board[newTile]>>3) != (board[tile]>>3)
@@ -142,6 +142,7 @@ public class Board {
 				if(board[newTile] != 0) break;
 			}
 		}
+		if(onlyKilling) return moves;
 		//pawn start move
 		if(
 			piece+1 == Pieces.Pawn && moved[tile] == 0 &&
@@ -193,17 +194,18 @@ public class Board {
 		return moves;
 	}
 	
-	public int Evaluate() {
-		int sum = 0;
-		foreach(int tile in pieces[0].Keys) sum += Pieces.values[board[tile]&7];
-		foreach(int tile in pieces[1].Keys) sum -= Pieces.values[board[tile]&7];
-		return sum*(turn?-1:1);
-	}
-	
-	public List<BoardMove> GetAllMoves() {
+	public List<BoardMove> GetAllMoves(bool onlyKilling = false) {
 		List<BoardMove> moves = new List<BoardMove>();
-		foreach(int tile in pieces[turn?0:1].Keys) {
-			foreach(BoardMove move in GetMoves(tile)) moves.Add(move);
+		int[] keys = new int[pieces[turn?0:1].Count];
+		int i= 0;
+		foreach(int key in pieces[turn?0:1].Keys) {
+			keys[i] = key;
+			i++;
+		}
+		foreach(int tile in keys) {
+			foreach(BoardMove move in GetMoves(tile, onlyKilling)) {
+				moves.Add(move);
+			}
 		}
 		return moves;
 	}
