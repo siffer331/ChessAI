@@ -3,10 +3,18 @@ using System;
 using System.Collections.Generic;
 
 
+
 public class AI
 {
 	
+	const int positiveInfinity = 9999999;
+	const int negativeInfinity = -positiveInfinity;
 	Board board;
+	public const int immediateMateScore = 100000;
+	public BoardMove bestMove;
+	public Dictionary<KeyValuePair<long,int>,int> searched;
+	public int searchedPositions = 0;
+	
 	public AI(Board _board) {
 		board = _board;
 	}
@@ -34,10 +42,10 @@ public class AI
 			int capturedPiece = board.board[move.toB]&7;
 			//capturing with low value pieces are gooood
 			if(capturedPiece != 0) score = (
-				10*Pieces.values[capturedPiece] - Pieces.values[capturedPiece]
+				10*Pieces.values[capturedPiece] - Pieces.values[movePiece]
 			);
 			//Promoting is gooood
-			if(move.promotion != -1) score += Pieces.values[move.promotion];
+			if(move.promotion != -1) score += Pieces.values[move.promotion]*4;
 			//moving a non pawn into a position thretened by a pawn is no good
 			if(movePiece != Pieces.Pawn) {
 				foreach(int piece in board.GetThreatened(
@@ -53,44 +61,61 @@ public class AI
 		moves.Sort((x, y) => y.score - x.score);
 	}
 	
-	private int searched = 0;
 	
 	public BoardMove GetBestMove(int depth) {
-		searched = 0;
-		BoardMove bestMove = new BoardMove(65,0,0,0,0);
-		int bestValue = -2000000000;
-		foreach(BoardMove move in board.GetAllMoves()) {
-			board.MakeMove(move);
-			int val = -Evaluate(depth-1, -bestValue);
-			if(val >= bestValue) {
-				bestMove = move;
-				bestValue = val;
-			}
-			board.UndoMove(move);
-		}
-		GD.Print(searched);
+		bestMove = new BoardMove(66,-1,-1,-1,-1);
+		searchedPositions = 0;
+		searched = new Dictionary<KeyValuePair<long,int>,int>();
+		Search(depth, 0, negativeInfinity, positiveInfinity);
 		return bestMove;
 	}
 	
-	public int Evaluate(int depth, int alpha) {
-		if(depth == 0) {
-			searched++;
-			return board.Evaluate();
+	public int Search(int depth, int plyFromRoot, int alpha, int beta) {
+		KeyValuePair<long,int> key = new KeyValuePair<long,int>(board.hash, depth);
+		if(searched.ContainsKey(key)) return searched[key];
+		searchedPositions++;
+		if(depth == 0) return SearchCaptures(alpha, beta);
+		if(plyFromRoot != 0) {
+			//position cant be worse than mate
+			alpha = Math.Max(alpha, -immediateMateScore + plyFromRoot);
+			beta = Math.Min(beta, immediateMateScore - plyFromRoot);
+			//if(alpha >= beta) return alpha;
 		}
-		int best = -2000000000;
 		List<BoardMove> moves = board.GetAllMoves();
+		//OrderMoves(moves);
+		foreach(BoardMove move in moves) {
+			board.MakeMove(move);
+			int val = -Search(depth-1, plyFromRoot+1, -beta, -alpha);
+			board.UndoMove(move);
+			if(alpha < val && plyFromRoot == 0) bestMove = move;
+			alpha = Math.Max(alpha, val);
+			if(val >= beta) return alpha;
+		}
+		if(moves.Count == 0) {
+			//encourage quiker mates
+			if(board.IsCheck()) alpha = plyFromRoot - immediateMateScore;
+			alpha = 0;
+		}
+		searched[key] = alpha;
+		return alpha;
+	}
+	
+	public int SearchCaptures(int alpha, int beta) {
+		KeyValuePair<long,int> key = new KeyValuePair<long,int>(board.hash, -1);
+		if(searched.ContainsKey(key)) return searched[key];
+		searchedPositions++;
+		int evaluation = Evaluation.Evaluate(board);
+		if(evaluation >= alpha) return evaluation;
+		List<BoardMove> moves = board.GetAllMoves(true);
 		OrderMoves(moves);
 		foreach(BoardMove move in moves) {
 			board.MakeMove(move);
-			int val = -Evaluate(depth-1, -best);
-			best = Math.Max(best, val);
+			int val = -SearchCaptures(-beta, -alpha);
 			board.UndoMove(move);
-			if(best > alpha) return best;
+			if(val >= beta) return beta;
+			alpha = Math.Max(alpha, val);
 		}
-		if(moves.Count == 0) {
-			if(board.IsCheck()) return best;
-			return 0;
-		}
-		return best;
+		searched[key] = alpha;
+		return alpha;
 	}
 }

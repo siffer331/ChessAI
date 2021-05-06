@@ -1,16 +1,23 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://SRC/Game/BoardUI.cs" type="Script" id=1]
 [ext_resource path="res://SRC/Game/Piece.tscn" type="PackedScene" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0980392, 0.0980392, 0.105882, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.145098, 0.14902, 0.180392, 1 )
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 1, 1, 1, 1 )
 corner_radius_top_left = 5
 corner_radius_top_right = 5
@@ -22,15 +29,84 @@ corner_radius_bottom_left = 5
 [node name="BoardUI" type="Node2D" parent="."]
 position = Vector2( 212, 0 )
 script = ExtResource( 1 )
-black = Color( 0.231373, 0.231373, 0.282353, 1 )
-white = Color( 0.788235, 0.784314, 0.815686, 1 )
-selected = Color( 0.741176, 0.698039, 0.4, 1 )
-avaliable = Color( 0.784314, 0.615686, 0.454902, 1 )
-enemy = Color( 0.792157, 0.470588, 0.345098, 1 )
-defaultUI = Color( 0.2, 0.2, 0.270588, 1 )
-selectedUI = Color( 0.368627, 0.388235, 0.47451, 1 )
 
-[node name="UI" type="Control" parent="."]
+[node name="Canvas" type="CanvasLayer" parent="."]
+
+[node name="Info" type="Panel" parent="Canvas"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 190.0
+margin_bottom = 320.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="Canvas/Info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Grid" type="GridContainer" parent="Canvas/Info/Margin"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 165.0
+margin_bottom = 295.0
+columns = 2
+
+[node name="Score" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_right = 78.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Score:"
+
+[node name="ScoreVal" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_left = 82.0
+margin_right = 160.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "0"
+align = 2
+
+[node name="Searched" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_top = 18.0
+margin_right = 78.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "Searched:"
+
+[node name="SearchedVal" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_left = 82.0
+margin_top = 18.0
+margin_right = 160.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "0"
+align = 2
+
+[node name="Hash" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_top = 36.0
+margin_right = 78.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+text = "Hash:"
+
+[node name="HashVal" type="Label" parent="Canvas/Info/Margin/Grid"]
+margin_left = 82.0
+margin_top = 36.0
+margin_right = 160.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+text = "0"
+align = 2
+
+[node name="UI" type="Control" parent="Canvas"]
 margin_left = 820.0
 margin_top = 201.0
 margin_right = 1017.0
@@ -39,23 +115,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="UI"]
+[node name="Panel" type="Panel" parent="Canvas/UI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Margin" type="MarginContainer" parent="UI"]
+[node name="Margin" type="MarginContainer" parent="Canvas/UI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
 custom_constants/margin_bottom = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Grid" type="GridContainer" parent="UI/Margin"]
+[node name="Grid" type="GridContainer" parent="Canvas/UI/Margin"]
 margin_left = 15.0
 margin_top = 15.0
 margin_right = 182.0
@@ -67,92 +146,93 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="2" type="TextureButton" parent="UI/Margin/Grid"]
+[node name="2" type="TextureButton" parent="Canvas/UI/Margin/Grid"]
 margin_right = 76.0
 margin_bottom = 76.0
 rect_min_size = Vector2( 76, 76 )
 
-[node name="Panel" type="Panel" parent="UI/Margin/Grid/2"]
+[node name="Panel" type="Panel" parent="Canvas/UI/Margin/Grid/2"]
 modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 0.943878
 margin_bottom = 0.943878
 mouse_filter = 2
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Piece" parent="UI/Margin/Grid/2" instance=ExtResource( 2 )]
+[node name="Piece" parent="Canvas/UI/Margin/Grid/2" instance=ExtResource( 2 )]
 position = Vector2( 38, 38 )
 scale = Vector2( 0.228, 0.228 )
 frame = 2
 
-[node name="3" type="TextureButton" parent="UI/Margin/Grid"]
+[node name="3" type="TextureButton" parent="Canvas/UI/Margin/Grid"]
 margin_left = 91.0
 margin_right = 167.0
 margin_bottom = 76.0
 rect_min_size = Vector2( 76, 76 )
 
-[node name="Panel" type="Panel" parent="UI/Margin/Grid/3"]
+[node name="Panel" type="Panel" parent="Canvas/UI/Margin/Grid/3"]
 modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Piece" parent="UI/Margin/Grid/3" instance=ExtResource( 2 )]
+[node name="Piece" parent="Canvas/UI/Margin/Grid/3" instance=ExtResource( 2 )]
 position = Vector2( 38, 38 )
 scale = Vector2( 0.228, 0.228 )
 frame = 3
 
-[node name="4" type="TextureButton" parent="UI/Margin/Grid"]
+[node name="4" type="TextureButton" parent="Canvas/UI/Margin/Grid"]
 margin_top = 91.0
 margin_right = 76.0
 margin_bottom = 167.0
 rect_min_size = Vector2( 76, 76 )
 
-[node name="Panel" type="Panel" parent="UI/Margin/Grid/4"]
+[node name="Panel" type="Panel" parent="Canvas/UI/Margin/Grid/4"]
 modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Piece" parent="UI/Margin/Grid/4" instance=ExtResource( 2 )]
+[node name="Piece" parent="Canvas/UI/Margin/Grid/4" instance=ExtResource( 2 )]
 position = Vector2( 38, 38 )
 scale = Vector2( 0.228, 0.228 )
 frame = 4
 
-[node name="5" type="TextureButton" parent="UI/Margin/Grid"]
+[node name="5" type="TextureButton" parent="Canvas/UI/Margin/Grid"]
 margin_left = 91.0
 margin_top = 91.0
 margin_right = 167.0
 margin_bottom = 167.0
 rect_min_size = Vector2( 76, 76 )
 
-[node name="Panel" type="Panel" parent="UI/Margin/Grid/5"]
+[node name="Panel" type="Panel" parent="Canvas/UI/Margin/Grid/5"]
 modulate = Color( 0.168627, 0.168627, 0.227451, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Piece" parent="UI/Margin/Grid/5" instance=ExtResource( 2 )]
+[node name="Piece" parent="Canvas/UI/Margin/Grid/5" instance=ExtResource( 2 )]
 position = Vector2( 38, 38 )
 scale = Vector2( 0.228, 0.228 )
 frame = 5
-[connection signal="pressed" from="UI/Margin/Grid/2" to="BoardUI" method="_on_Button_pressed" binds= [ 2 ]]
-[connection signal="pressed" from="UI/Margin/Grid/3" to="BoardUI" method="_on_Button_pressed" binds= [ 3 ]]
-[connection signal="pressed" from="UI/Margin/Grid/4" to="BoardUI" method="_on_Button_pressed" binds= [ 4 ]]
-[connection signal="pressed" from="UI/Margin/Grid/5" to="BoardUI" method="_on_Button_pressed" binds= [ 5 ]]
+
+[connection signal="pressed" from="Canvas/UI/Margin/Grid/2" to="BoardUI" method="_on_Button_pressed" binds= [ 2 ]]
+[connection signal="pressed" from="Canvas/UI/Margin/Grid/3" to="BoardUI" method="_on_Button_pressed" binds= [ 3 ]]
+[connection signal="pressed" from="Canvas/UI/Margin/Grid/4" to="BoardUI" method="_on_Button_pressed" binds= [ 4 ]]
+[connection signal="pressed" from="Canvas/UI/Margin/Grid/5" to="BoardUI" method="_on_Button_pressed" binds= [ 5 ]]

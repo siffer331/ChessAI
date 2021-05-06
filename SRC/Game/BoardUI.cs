@@ -5,28 +5,29 @@ using System.Collections.Generic;
 public class BoardUI : Node2D
 {
 	[Export]
-	public Color black;
+	public Color black = new Color("#41485e");
 	[Export]
-	private Color white;
+	private Color white = new Color("#a8a8be");
 	[Export]
-	private Color selected;
+	private Color selected = new Color("#c8b051");
 	[Export]
-	private Color avaliable;
+	private Color avaliable = new Color("#d0955b");
 	[Export]
-	private Color enemy;
+	private Color enemy = new Color("#d94141");
 	[Export]
 	private int height = 600;
 	[Export]
-	private Color defaultUI;
+	private Color defaultUI = new Color("#323250");
 	[Export]
-	private Color selectedUI;
+	private Color selectedUI = new Color("#262535");
 	
 	private AI ai;
-	private float aiMove = 100f;
+	private float aiMove = 100;
 	private int selectedTile = -1;
 	private Board board = new Board();
 	private int promotion = Pieces.Queen;
 	private Stack<BoardMove> stack = new Stack<BoardMove>();
+	private const String infoPath = "../Canvas/Info/Margin/Grid/";
 	
 	//test strings:
 	//  rnbqkbnr/2pppppp/8/pP6/8/8/1PPPPPPP/RNBQKBNR w
@@ -51,6 +52,8 @@ public class BoardUI : Node2D
 					if(board.board[tile] != 0) overlay = enemy;
 				}
 				if(tile == selectedTile) overlay = selected;
+				if(stack.Count>0&&(tile==stack.Peek().toB||tile==stack.Peek().fromB))
+					overlay = selected;
 				//if(board.pieces[0].ContainsKey(tile)) overlay = new Color(1,1,1);
 				//if(board.pieces[1].ContainsKey(tile)) overlay = new Color(0,0,0); 
 				c = c.LinearInterpolate(overlay, .75f);
@@ -59,6 +62,9 @@ public class BoardUI : Node2D
 				DrawRect(rect, c);
 			}
 		}
+		(GetNode(infoPath + "SearchedVal") as Label).Text = ai.searchedPositions.ToString();
+		(GetNode(infoPath + "ScoreVal") as Label).Text = Evaluation.Evaluate(board).ToString();
+		(GetNode(infoPath + "HashVal") as Label).Text = (board.hash>>32).ToString();
 	}
 	
 	public BoardMove PointsHas(int to) {
@@ -87,8 +93,8 @@ public class BoardUI : Node2D
 	}
 	
 	public override void _Process(float delta) {
-		if(aiMove < 90 && aiMove > 0.01) {
-			BoardMove move = ai.GetBestMove(4);
+		if(aiMove < 90 && aiMove > 0.1) {
+			BoardMove move = ai.GetBestMove(5);
 			stack.Push(move);
 			board.MakeMove(move);
 			DrawBoard(board);
@@ -128,7 +134,7 @@ public class BoardUI : Node2D
 					selectedTile = -1;
 					DrawBoard(board);
 					Update();
-					aiMove = 0;
+					aiMove = 00;
 				}
 			}
 		}
@@ -143,10 +149,10 @@ public class BoardUI : Node2D
 	
 	private void _on_Button_pressed(int piece)
 	{
-		Panel panel = GetNode("../UI/Margin/Grid/" + promotion.ToString() + "/Panel") as Panel;
+		Panel panel = GetNode("../Canvas/UI/Margin/Grid/" + promotion.ToString() + "/Panel") as Panel;
 		panel.Modulate = defaultUI;
 		promotion = piece;
-		panel = GetNode("../UI/Margin/Grid/" + promotion.ToString() + "/Panel") as Panel;
+		panel = GetNode("../Canvas/UI/Margin/Grid/" + promotion.ToString() + "/Panel") as Panel;
 		panel.Modulate = selectedUI;
 	}
 }

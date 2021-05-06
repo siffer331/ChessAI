@@ -10,7 +10,12 @@ public class Board {
 	public bool turn = false;
 	public int whiteKing;
 	public int blackKing;
+	public long hash;
 	public Dictionary<int,int>[] pieces = {new Dictionary<int,int>(), new Dictionary<int,int>()};
+	
+	private long[] hashingValues = new long[777];
+	private Stack<long> turns = new Stack<long>();
+	private HashSet<long> turnSet = new HashSet<long>();
 	
 	private int[] moved = new int[64];
 	private int enPessan = 65;
@@ -95,7 +100,7 @@ public class Board {
 	}
 	
 	//get possible moves from a tile
-	public List<BoardMove> GetMoves(int tile) {
+	public List<BoardMove> GetMoves(int tile, bool onlyKilling = false) {
 		List<BoardMove> moves = new List<BoardMove>();
 		if(board[tile] == 0 || (((board[tile]>>3) == 1) == turn)) return moves;
 		Vector2 p = ToV(tile);
@@ -109,7 +114,7 @@ public class Board {
 			for(int j = 1; ToI(p+j*d) > -1 && (j == 1 || m.line); j++) {
 				int newTile = ToI(p+j*d);
 				if(
-					(board[newTile] == 0 && !m.exclusive) || 
+					(board[newTile] == 0 && !m.exclusive && !onlyKilling) || 
 					(
 						m.kill && board[newTile] != 0 &&
 						(board[newTile]>>3) != (board[tile]>>3)
@@ -124,8 +129,12 @@ public class Board {
 						newTile, board[newTile],
 						-1, -1, enPessanMove
 					);
-					MakeMove(move);
-					if(!IsThreatened(color ? whiteKing: blackKing, color)) {
+					MakeMove(move, false);
+					long moveHash = hash;
+					if(
+						!turnSet.Contains(hash) &&
+						!IsThreatened(color ? whiteKing: blackKing, color)
+					) {
 						if(
 							piece == Pieces.Pawn-1 &&
 							((newTile>>3) == 7 || (newTile>>3) == 0)
@@ -137,11 +146,12 @@ public class Board {
 						}
 						else moves.Add(move);
 					};
-					UndoMove(move);
+					UndoMove(move, false);
 				}
 				if(board[newTile] != 0) break;
 			}
 		}
+		if(onlyKilling) return moves;
 		//pawn start move
 		if(
 			piece+1 == Pieces.Pawn && moved[tile] == 0 &&
@@ -153,12 +163,13 @@ public class Board {
 				tile+(forward<<4), board[tile+(forward<<4)],
 				-1, -1, -1, true
 			);
-			MakeMove(move);
-			if(!IsThreatened(
+			MakeMove(move, false);
+			long moveHash = hash;
+			if(!turnSet.Contains(hash) && !IsThreatened(
 				color ? whiteKing: blackKing,
 				color
 			)) moves.Add(move);
-			UndoMove(move);
+			UndoMove(move, false);
 		}
 		//castleling
 		if(
@@ -193,17 +204,18 @@ public class Board {
 		return moves;
 	}
 	
-	public int Evaluate() {
-		int sum = 0;
-		foreach(int tile in pieces[0].Keys) sum += Pieces.values[board[tile]&7];
-		foreach(int tile in pieces[1].Keys) sum -= Pieces.values[board[tile]&7];
-		return sum*(turn?-1:1);
-	}
-	
-	public List<BoardMove> GetAllMoves() {
+	public List<BoardMove> GetAllMoves(bool onlyKilling = false) {
 		List<BoardMove> moves = new List<BoardMove>();
-		foreach(int tile in pieces[turn?0:1].Keys) {
-			foreach(BoardMove move in GetMoves(tile)) moves.Add(move);
+		int[] keys = new int[pieces[turn?0:1].Count];
+		int i= 0;
+		foreach(int key in pieces[turn?0:1].Keys) {
+			keys[i] = key;
+			i++;
+		}
+		foreach(int tile in keys) {
+			foreach(BoardMove move in GetMoves(tile, onlyKilling)) {
+				moves.Add(move);
+			}
 		}
 		return moves;
 	}
@@ -234,9 +246,12 @@ public class Board {
 	}
 	
 	//make move
-	public void MakeMove(BoardMove move) {
+	public void MakeMove(BoardMove move, bool remember = true) {
+		if(move.enPessan == 66) return;
 		int color = turn?0:1;
 		//move
+		Hash(move.toB);
+		Hash(move.fromB);
 		board[move.toB] = board[move.fromB];
 		board[move.fromB] = 0;
 		moved[move.fromB]++;
@@ -244,8 +259,12 @@ public class Board {
 		turn = !turn;
 		//castleling
 		if(move.rookFrom != -1) {
+			Hash(move.rookTo);
+			Hash(move.rookFrom);
 			board[move.rookTo] = board[move.rookFrom];
 			board[move.rookFrom] = 0;
+			Hash(move.rookTo);
+			Hash(move.rookFrom);
 			pieces[color][move.rookTo] = board[move.rookTo];
 			pieces[color].Remove(move.rookFrom);
 		}
@@ -256,23 +275,40 @@ public class Board {
 		pieces[color].Remove(move.fromB);
 		//kill en pessan
 		if(move.pawnDead != -1) {
+			Hash(move.pawnDead);
 			board[move.pawnDead] = 0;
 			pieces[1^color].Remove(move.pawnDead);
 		}
+		if(enPessan < 65) hash ^= hashingValues[enPessan&7];
 		//set en pessan
 		enPessan = 65;
 		if(move.startPawnMove) enPessan = (move.toB+move.fromB)>>1;
+		if(enPessan < 65) hash ^= hashingValues[enPessan&7];
 		//keep track of kings
 		if(board[move.toB] == Pieces.King+8) blackKing = move.toB;
 		if(board[move.toB] == Pieces.King) whiteKing = move.toB;
 		//GD.Print(ToString());
+		hash ^= hashingValues[0];
+		Hash(move.toB);
+		Hash(move.fromB);
+		if(remember) {
+			turns.Push(hash);
+			turnSet.Add(hash);
+		}
 	}
 	
-	public void UndoMove(BoardMove move) {
+	public void UndoMove(BoardMove move, bool remember = true) {
+		if(remember) turnSet.Remove(turns.Pop());
 		int color = turn?1:0;
+		if(enPessan < 65) hash ^= hashingValues[enPessan&7];
 		enPessan = move.enPessan;
+		if(enPessan < 65) hash ^= hashingValues[enPessan&7];
+		Hash(move.toB);
+		Hash(move.fromB);
 		board[move.fromB] = move.fromP;
 		board[move.toB] = move.toP;
+		Hash(move.toB);
+		Hash(move.fromB);
 		moved[move.fromB]--;
 		moved[move.toB]--;
 		pieces[color][move.fromB] = move.fromP;
@@ -291,6 +327,7 @@ public class Board {
 		if(board[move.fromB] == Pieces.King+8) blackKing = move.fromB;
 		if(board[move.fromB] == Pieces.King) whiteKing = move.fromB;
 		turn = !turn;
+		hash ^= hashingValues[0];
 	}
 	
 	//get board after a move
@@ -344,5 +381,24 @@ public class Board {
 				}
 			}
 		}
+		Random random = new Random();
+		byte[] bytes = new byte[8];
+		for(int i = 0; i < 777; i++) {
+			random.NextBytes(bytes);
+			hashingValues[i] = BitConverter.ToInt64(bytes,0);
+		}
+		foreach(int t in pieces[0].Keys) 
+			hash ^= hashingValues[9+tile*(pieces[0][t]-1)];
+		foreach(int t in pieces[1].Keys) 
+			hash ^= hashingValues[9+tile*(pieces[1][t]-3)];
+		if(turn) hash ^= hashingValues[0];
+		turns.Push(hash);
+		turnSet.Add(hash);
+	}
+	
+	void Hash(int tile) {
+		if(board[tile] == 0) return;
+		if(board[tile] > 8) hash ^= hashingValues[9+tile*(board[tile]-3)];
+		else hash ^= hashingValues[9+tile*(board[tile]-1)];
 	}
 }
