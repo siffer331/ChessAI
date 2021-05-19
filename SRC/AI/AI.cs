@@ -12,7 +12,7 @@ public class AI
 	Board board;
 	public const int immediateMateScore = 100000;
 	public BoardMove bestMove;
-	public Dictionary<KeyValuePair<long,int>,int> searched;
+	public SortedDictionary<Tuple<long,int>,int> searched;
 	public int searchedPositions = 0;
 	
 	public AI(Board _board) {
@@ -65,13 +65,13 @@ public class AI
 	public BoardMove GetBestMove(int depth) {
 		bestMove = new BoardMove(66,-1,-1,-1,-1);
 		searchedPositions = 0;
-		searched = new Dictionary<KeyValuePair<long,int>,int>();
+		searched = new SortedDictionary<Tuple<long,int>,int>();
 		Search(depth, 0, negativeInfinity, positiveInfinity);
 		return bestMove;
 	}
 	
 	public int Search(int depth, int plyFromRoot, int alpha, int beta) {
-		KeyValuePair<long,int> key = new KeyValuePair<long,int>(board.hash, depth);
+		Tuple<long,int> key = new Tuple<long,int>(board.hash, depth);
 		if(searched.ContainsKey(key)) return searched[key];
 		searchedPositions++;
 		if(depth == 0) return SearchCaptures(alpha, beta);
@@ -94,14 +94,14 @@ public class AI
 		if(moves.Count == 0) {
 			//encourage quiker mates
 			if(board.IsCheck()) alpha = plyFromRoot - immediateMateScore;
-			alpha = 0;
+			else alpha = 0;
 		}
 		searched[key] = alpha;
 		return alpha;
 	}
 	
 	public int SearchCaptures(int alpha, int beta) {
-		KeyValuePair<long,int> key = new KeyValuePair<long,int>(board.hash, -1);
+		Tuple<long,int> key = new Tuple<long,int>(board.hash, -1);
 		if(searched.ContainsKey(key)) return searched[key];
 		searchedPositions++;
 		int evaluation = Evaluation.Evaluate(board);

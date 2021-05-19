@@ -94,7 +94,7 @@ public class BoardUI : Node2D
 	
 	public override void _Process(float delta) {
 		if(aiMove < 90 && aiMove > 0.1) {
-			BoardMove move = ai.GetBestMove(5);
+			BoardMove move = ai.GetBestMove(4);
 			stack.Push(move);
 			board.MakeMove(move);
 			DrawBoard(board);

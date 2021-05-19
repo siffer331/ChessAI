@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/siffer/Projects/ChessAI/ChessAI.csproj",
+      "projectUniqueName": "/home/siffer/Documents/Projects/ChessAI/ChessAI.csproj",
       "projectName": "ChessAI",
-      "projectPath": "/home/siffer/Projects/ChessAI/ChessAI.csproj",
+      "projectPath": "/home/siffer/Documents/Projects/ChessAI/ChessAI.csproj",
       "packagesPath": "/home/siffer/.nuget/packages/",
-      "outputPath": "/home/siffer/Projects/ChessAI/.mono/temp/obj/",
+      "outputPath": "/home/siffer/Documents/Projects/ChessAI/.mono/temp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/siffer/.config/NuGet/NuGet.Config"
@@ -44,13 +44,5 @@
         "runtimeIdentifierGraphPath": "/usr/lib/mono/msbuild/Current/bin/RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file /home/siffer/Projects/ChessAI/.mono/temp/obj/project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }

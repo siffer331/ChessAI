@@ -231,7 +231,6 @@ __meta__ = {
 position = Vector2( 38, 38 )
 scale = Vector2( 0.228, 0.228 )
 frame = 5
-
 [connection signal="pressed" from="Canvas/UI/Margin/Grid/2" to="BoardUI" method="_on_Button_pressed" binds= [ 2 ]]
 [connection signal="pressed" from="Canvas/UI/Margin/Grid/3" to="BoardUI" method="_on_Button_pressed" binds= [ 3 ]]
 [connection signal="pressed" from="Canvas/UI/Margin/Grid/4" to="BoardUI" method="_on_Button_pressed" binds= [ 4 ]]

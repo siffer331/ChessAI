@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TaPeCKQiFHnuqeh68p2aT8VwqQt1R4DsxJxZMOx12ga6ZA5vERMdsry9q+QH6VwSgSKBYKOj5/1Xi9jFehdrdg==",
+  "dgSpecHash": "NSOBUC2+98vPVSt1nCXzO1n7JrmBl67pGXJA9ZRTBzBnF1vgLKznnUlO8T3fJiuMkUPbd3+H4nZt49w9Z5Wbug==",
   "success": true,
-  "projectFilePath": "/home/siffer/Projects/ChessAI/ChessAI.csproj",
+  "projectFilePath": "/home/siffer/Documents/Projects/ChessAI/ChessAI.csproj",
   "expectedPackageFiles": [],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file /home/siffer/Projects/ChessAI/.mono/temp/obj/project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }
